@@ -31,12 +31,15 @@ This exercise accompanies the lessons in Environmental Data Analytics on coding 
 4.  Insert comments in your code to describe what you are doing.
 
 ```{r basics 1}
-#1. 
-
+#1.
+sequence3 <- seq(1,30,3) #number sequence 1-30 by 3s
+sequence3
 #2. 
-
+#find mean and median and assign names
+s3mean <- mean(sequence3)
+s3median <- median(sequence3)
 #3. 
-
+s3mean > s3median #use names to compare mean and median
 ```
 
 ## Basics, Part 2
@@ -50,7 +53,12 @@ This exercise accompanies the lessons in Environmental Data Analytics on coding 
 8.  Label the columns of your data frame with informative titles.
 
 ```{r basics 2}
-
+students <- c("Matt","Steve","Kevin","Priscilla")
+test_scores <- sample(0:100,4)
+print(test_scores)
+passing <- for(score in test_scores)
+  if 
+  
 ```
 
 9.  QUESTION: How is this data frame different from a matrix?
