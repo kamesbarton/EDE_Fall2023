@@ -55,39 +55,29 @@ s3mean > s3median #use names to compare mean and median
 ```{r basics 2}
 #5 & 6
 students <- c("Matt","Steve","Kevin","Priscilla") #name vector
-test_scores <- sample(0:100,4) #4 random test scores 0-100
-print(test_scores)
+test_scores <- sample(0:100,4) #4 random test scores 0-100 vector
 passing <- test_scores >= 50 #pass/fail vector
-print(passing)
 #7 & 8 
 test_df <- data.frame("Student Name" = students, "Test Score" = test_scores, "Pass/Fail" = passing)
-print(test_df)
 ```
 
 9.  QUESTION: How is this data frame different from a matrix?
 
-> Answer: Data frames can hold different types of data, while all data in a matrix has to be the same kind.
+> Answer: Data frames can hold different types of data in the same data frame (for example, strings, integers and boolean values), while all data in a matrix has to be the same kind.
 
 10. Create a function with an if/else statement. Your function should take a **vector** of test scores and print (not return) whether a given test score is a passing grade of 50 or above (TRUE or FALSE). You will need to choose either the `if` and `else` statements or the `ifelse` statement. 
 
 11. Apply your function to the vector with test scores that you created in number 5.
 
 ```{r basics 3}
-#I feel like this is easier to do without a function
-pass_function<- function(scores){
-  for(score in scores){
-    if(score>=50) {print(TRUE)}
-    else {print(FALSE)}}}
-
-pass_function(test_scores)
-
-pass_function2 <- function(scores){
+#10
+pass_function <- function(scores){
     print(ifelse(scores>=50, TRUE, FALSE))
-  }
-
-pass_function2(test_scores)
+}
+#11
+pass_function(test_scores)
 ```
 
 12. QUESTION: Which option of `if` and `else` vs. `ifelse` worked? Why?
 
-> Answer: Both options work equally. Because there are only two options (TRUE and FALSE), ifelse can be used
+> Answer: Both options can work, but ifelse is better. ifelse returns a vector of TRUE and FALSE in just one step. In order to get something similar using if and else, you would have to use a for loop to iterate through each item in the vector, choose an outcome of TRUE or FALSE and assign those values to a vector. Using ifelse is less code and I assume it's more efficient.
