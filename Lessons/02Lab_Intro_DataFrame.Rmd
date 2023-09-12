@@ -1,4 +1,4 @@
----
+data---
 title: "Intro to Data Frames in R"
 subtitle: "Environmental Data Analytics"
 author: "Luana Lima"
@@ -32,6 +32,7 @@ Suppose you want just the column speed. How would you access that data?
 
 ```{r}
 cars$speed
+mtcars$cyl
 ```
 
 How would you store it on another object?
@@ -106,11 +107,11 @@ Some useful functions to use with data frames.
 ncol(df)  
 nrow(df)  
 length(df)  #same as ncol
-summary(df)
-head(df) #show the first 6 rows of df
+summary(df) #shows summary stats
+head(df) #show the first 6 rows of df, optionally show certain number of records
 
 #If you know the number of the column you want you can refer to that to access column
-df[,1]
+df2 <- df[c(2,1,3),]$car_speed
 
 #you could also use this notation to delete columns
 df <- df[,-2]
