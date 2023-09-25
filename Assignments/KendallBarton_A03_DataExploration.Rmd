@@ -36,7 +36,7 @@ This exercise accompanies the lessons in Environmental Data Analytics on Data Ex
 getwd() #wd is set to the EDE_Fall2023 folder!
 library(tidyverse)
 library(lubridate)
-Neonics <- read.csv('./Data/Raw/ECOTOX_Neonicotinoids_Insects_raw.csv',stringsAsFactors = TRUE) 
+Neonics <- read.csv('./Data/Raw/ECOTOX_Neonicotinoids_Insects_raw.csv',stringsAsFactors = TRUE)
 #datasets are already downloaded in EDE_Fall2023 folder
 Litter <- read.csv('./Data/Raw/NEON_NIWO_Litter_massdata_2018-08_raw.csv',stringsAsFactors = TRUE)
 ```

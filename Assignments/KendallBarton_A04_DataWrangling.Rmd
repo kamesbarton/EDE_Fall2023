@@ -1,6 +1,6 @@
 ---
 title: "Assignment 4: Data Wrangling"
-author: "Student Name"
+author: "Kendall Barton"
 output: pdf_document
 geometry: margin=2.54cm
 ---
@@ -32,13 +32,24 @@ The completed exercise is due on Thursday, Sept 28th @ 5:00pm.
 
 ```{r setup, message = FALSE}
 #1a 
+library(tidyverse)
+library(lubridate)
+library(here)
 
 #1b 
-
+getwd()
+setwd(here())
+getwd()
 #1c 
-
+PM25_NC2019 <- read.csv('./Data/Raw/EPAair_PM25_NC2019_raw.csv',stringsAsFactors = TRUE)
+PM25_NC2018 <- read.csv('./Data/Raw/EPAair_PM25_NC2018_raw.csv',stringsAsFactors = TRUE)
+O3_NC2019 <- read.csv('./Data/Raw/EPAair_O3_NC2019_raw.csv',stringsAsFactors = TRUE)
+O3_NC2018 <- read.csv('./Data/Raw/EPAair_O3_NC2018_raw.csv',stringsAsFactors = TRUE)
 #2 
-
+glimpse(PM25_NC2019)
+glimpse(PM25_NC2018)
+glimpse(O3_NC2019)
+glimpse(O3_NC2018)
 ```
 
 
@@ -54,10 +65,20 @@ The completed exercise is due on Thursday, Sept 28th @ 5:00pm.
 
 ```{r}
 #3
+PM25_NC2019$Date <- as.Date(PM25_NC2019$Date, format = "%m/%d/%Y")
+PM25_NC2018$Date <- as.Date(PM25_NC2018$Date, format = "%m/%d/%Y")
+O3_NC2019$Date <- as.Date(O3_NC2019$Date, format = "%m/%d/%Y")
+O3_NC2018$Date <- as.Date(O3_NC2018$Date, format = "%m/%d/%Y")
 
 #4
+sel_PM25_2019 <- select(PM25_NC2019, Date, DAILY_AQI_VALUE, Site.Name, AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, SITE_LONGITUDE)
+sel_PM25_2018 <- select(PM25_NC2018, Date, DAILY_AQI_VALUE, Site.Name, AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, SITE_LONGITUDE)
+sel_O3_2019 <- select(O3_NC2019, Date, DAILY_AQI_VALUE, Site.Name, AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, SITE_LONGITUDE)
+sel_O3_2018 <- select(O3_NC2018, Date, DAILY_AQI_VALUE, Site.Name, AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, SITE_LONGITUDE)
 
 #5
+sel_PM25_2019$AQS_PARAMETER_DESC <- rep("PM2.5",nrow(sel_PM25_2019))
+sel_PM25_2018$AQS_PARAMETER_DESC <- rep("PM2.5",nrow(sel_PM25_2018))
 
 #6
 
