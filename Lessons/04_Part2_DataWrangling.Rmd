@@ -149,7 +149,7 @@ Litter.2019 <- rbind(Litter.June2016, Litter.July2016, Litter.August2016)
 However, there are 20 months in this dataset, so importing all these files individually would be tedious to code. Here is a more efficient way to import and combine all files.
 
 ```{r import many datasets}
-LitterFiles = list.files(path = "./Data/Raw/NIWO_Litter/", pattern="*.csv", full.names=TRUE)
+LitterFiles <- list.files(path = "./Data/Raw/NIWO_Litter/", pattern="*.csv", full.names=TRUE)
 LitterFiles
 
 Litter <- LitterFiles %>%
