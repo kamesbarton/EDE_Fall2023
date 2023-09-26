@@ -71,7 +71,8 @@ O3_NC2018$Date <- as.Date(O3_NC2018$Date, format = "%m/%d/%Y")
 
 #4
 sel_PM25_2019 <- select(PM25_NC2019, Date, DAILY_AQI_VALUE, Site.Name,
-                        AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, SITE_LONGITUDE) #select columns for each data set
+                        AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, SITE_LONGITUDE)
+#select columns for each data set
 sel_PM25_2018 <- select(PM25_NC2018, Date, DAILY_AQI_VALUE, Site.Name,
                         AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, SITE_LONGITUDE)
 sel_O3_2019 <- select(O3_NC2019, Date, DAILY_AQI_VALUE, Site.Name,
