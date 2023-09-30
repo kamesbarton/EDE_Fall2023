@@ -113,9 +113,11 @@ NTL.TL.90s.Jul <- NTL.TL.90s %>%
 # find the mean surface temperature (hints: you will need to add another
 # filter for depth==0). Make sure you eliminate NAs before computing the means.
 #NTL.TL.90s.Jul %>%
-x <- NTL.TL.90s.Jul %>%
-  filter(!is.na(temperature_C))
+mean_temp <- NTL.TL.90s.Jul %>%
+  filter(!is.na(temperature_C) & depth == 0) %>%
+  summarise(mean(temperature_C))
 
+print(mean_temp)
 ```
 
 ## Gather and Spread
@@ -127,7 +129,8 @@ For gather we will use `pivot_longer` and for spread we will use `pivot_wider`.
 #  on the deck of the sampling boat) into one column using pivot_longer. Name
 #  the new column holding the irradiance type as "Irradiance_Type", and name the
 #  new column holding the irradiance values as "Irradiance_Value".
-
+NTL.irr.data <- NTL.phys.data %>%
+  pivot_longer(irradianceWater & irradianceDeck, names_to = Irradiance_Type, Irradiance_Value, values_to = )
 
 #Exercise 6: Spread temperatureC into more than one column based on the depth.
 
