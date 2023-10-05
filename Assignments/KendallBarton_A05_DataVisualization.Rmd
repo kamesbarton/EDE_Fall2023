@@ -38,13 +38,15 @@ library(here)
 library(cowplot)
 library(ggthemes)
 getwd()
-lake_chem_df <- read.csv("./Data/Processed_KEY/NTL-LTER_Lake_Chemistry_Nutrients_PeterPaul_Processed.csv")
-litter_df <- read.csv("./Data/Processed_KEY/NEON_NIWO_Litter_mass_trap_Processed.csv")
+lake_chem_df <- read.csv("./Data/Processed_KEY/NTL-LTER_Lake_Chemistry_Nutrients_PeterPaul_Processed.csv",
+                         stringsAsFactors = TRUE)
+litter_df <- read.csv("./Data/Processed_KEY/NEON_NIWO_Litter_mass_trap_Processed.csv",
+                      stringsAsFactors = TRUE)
 
 #2 
-class(lake_chem_df$sampledate)
+class(lake_chem_df$sampledate) #they are factors
 class(litter_df$collectDate)
-lake_chem_df$sampledate <- as.Date(lake_chem_df$sampledate)
+lake_chem_df$sampledate <- as.Date(lake_chem_df$sampledate) #make into date
 litter_df$collectDate <-as.Date(litter_df$collectDate)
 
 ```
@@ -61,24 +63,26 @@ litter_df$collectDate <-as.Date(litter_df$collectDate)
 theme1 <- theme_base() + 
   theme(
     plot.title = element_text(
-      color = 'gray35', hjust = 0.5, size = 16
+      color = 'gray35', hjust = 0.5, size = 16 #hjust for centering
     ),
-      plot.background =   element_rect(
-      fill = 'mistyrose', color = 'gray35'
+    plot.background =   element_rect(
+      fill = 'mistyrose', color = 'gray35' #color is just border
     ),
     legend.background = element_rect(
-      color='gray35',
-      fill = 'rosybrown'
+      color='gray35', fill = 'rosybrown' #color is just border
     ),
     legend.title = element_text(
       color='white', size = 12
     ),
     legend.text = element_text(
-      size=10),
-    axis.title = element_text(
-      size=12),
-    axis.text = element_text(
-      size=10)
+      size=10
+    ),
+    axis.title = element_text( #x and y labels
+      size=12
+    ),
+    axis.text = element_text( #numbers
+      size=10
+    )
   )
 ```
 
@@ -88,15 +92,16 @@ For numbers 4-7, create ggplot graphs and adjust aesthetics to follow best pract
 4. [NTL-LTER] Plot total phosphorus (`tp_ug`) by phosphate (`po4`), with separate aesthetics for Peter and Paul lakes. Add a line of best fit and color it black. Adjust your axes to hide extreme values (hint: change the limits using `xlim()` and/or `ylim()`).
 
 ```{r plot total P vs PO4}
-#4 
-# x = po4, y = tp_ug
+#4
 ggplot(lake_chem_df, aes(x = po4, y = tp_ug, color = lakename)) +
   geom_point() +
-  xlim(0,35) +
-  labs(title = "Phosphorus by Phosphate in Peter and Paul Lakes", x = "Phosphate", 
-       y = "Phosphorus", color = "Lake Name") +
-  geom_smooth(method = lm, color = "black") +
+  xlim(0,45) + #eliminate extreme values
+  labs(title = "Phosphorus by Phosphate in Peter and Paul Lakes", 
+       x = expression(paste("Phosphate (", mu,"g)")), #slack said units are micrograms
+       y = expression(paste("Phosphorus (", mu,"g)")), color = "Lake Name") +
+  geom_smooth(method = lm, color = "black") + #line of best fit
   theme1
+
 ```
 
 
@@ -109,9 +114,9 @@ Tip:
 ```{r Create boxplots}
 #5 
 temp_bp <- ggplot(lake_chem_df, 
-                  aes(x = factor(month, levels = 1:12, 
-                                 labels = month.abb), 
+                  aes(x = factor(month, levels = 1:12, labels = month.abb), 
                       y = temperature_C, color = lakename)) +
+  #ensure all 12 months will be present
   geom_boxplot() +
   scale_x_discrete(name = "Month", drop = F) +
   labs(title = "Lake Temperature by Month", y = "Temperature (C)",
@@ -120,26 +125,31 @@ temp_bp <- ggplot(lake_chem_df,
 temp_bp
 
 tp_bp <- ggplot(lake_chem_df, 
-                aes(x = factor(month, levels = 1:12,
-                               labels = month.abb), 
+                aes(x = factor(month, levels = 1:12, labels = month.abb), 
                     y = tp_ug, color = lakename)) +
   geom_boxplot() +
   scale_x_discrete(name = "Month", drop = F) +
-  labs(title = "Lake Total Phosphorus by Month", x = "Month", y = "Total Phosphorus",
+  labs(title = "Lake Total Phosphorus by Month", x = "Month",
+       y = expression(paste("Total Phosphorus (", mu,"g)")),
        color = "Lake Name") +
   theme1
 tp_bp
 
 tn_bp <- ggplot(lake_chem_df,
-                aes(x = factor(month, levels = 1:12,
-                                             labels = month.abb),
-                                  y = tn_ug, color = lakename)) +
+                aes(x = factor(month, levels = 1:12, labels = month.abb),
+                    y = tn_ug, color = lakename)) +
   geom_boxplot() +
   scale_x_discrete(name = "Month", drop = F) +
-  labs(title = "Lake Total Nitrogen by Month", x = "Month", y = "Total Nitrogen",
+  labs(title = "Lake Total Nitrogen by Month", x = "Month",
+       y = expression(paste("Total Nitrogen (", mu,"g)")),
        color = "Lake Name") +
   theme1
 tn_bp
+
+```
+
+```{r comment=NA, warning=FALSE,message=FALSE,fig.height=8}
+#I made a new chunk so I could change chunk options for this graph (fig.height=8)
 
 plot_grid(temp_bp + theme(legend.position="none"),
           tp_bp + theme(legend.position="none"),
@@ -147,13 +157,12 @@ plot_grid(temp_bp + theme(legend.position="none"),
           legend = get_legend(temp_bp + 
                                 guides(color = guide_legend(nrow = 1)))) +
   theme1
-
-
+  
 ```
 
 Question: What do you observe about the variables of interest over seasons and between lakes? 
 
-> Answer: 
+> Answer: The temperature increases from May until August and September, then falls in October and November in both lakes. In Peter Lake, phosphorus increases from May to September, while in Paul Lake it changes very little. There is also higher phosphorus on average in Peter Lake than Paul Lake. I can't see a clear trend across total nitrogen, except that Peter Lake tends to be higher than Paul Lake.
 
 6. [Niwot Ridge] Plot a subset of the litter dataset by displaying only the "Needles" functional group. Plot the dry mass of needle litter by date and separate by NLCD class with a color aesthetic. (no need to adjust the name of each land use)
 
@@ -161,11 +170,11 @@ Question: What do you observe about the variables of interest over seasons and b
 
 ```{r Plot litter}
 #6
-ggplot(filter(litter_df, functionalGroup == "Needles"),
+ggplot(filter(litter_df, functionalGroup == "Needles"), #use only Needles functional group
        aes(x = collectDate, y = dryMass, color = nlcdClass)) +
   geom_point() +
   labs(title = "Needle Dry Mass by Date and NCLD Class", x = "Sample Date",
-       y = "Needle Dry Mass", color = "NLCD Class") +
+       y = "Needle Dry Mass", color = "NLCD Class") + #color = for different colors
   theme1
   
 #7
@@ -174,7 +183,7 @@ ggplot(filter(litter_df, functionalGroup == "Needles"),
   geom_point() +
   labs(title = "Needle Dry Mass by Date and NCLD Class", x = "Sample Date",
        y = "Needle Dry Mass (g)") +
-  facet_wrap(vars(nlcdClass)) +
+  facet_wrap(vars(nlcdClass)) + #facet wrap for multiple graphs
   theme1
 
 ```
