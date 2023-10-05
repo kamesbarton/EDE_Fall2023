@@ -12,7 +12,7 @@ editor_options:
 
 ## OVERVIEW
 
-This exercise accompanies the lessons in Environmental Data Analytics on Data Visualization 
+This exercise accompanies the lessons in Environmental Data Analytics on Data Visualization
 
 ## Directions
 1.  Rename this file `<FirstLast>_A05_DataVisualization.Rmd` (replacing `<FirstLast>` with your first and last name).
@@ -26,14 +26,26 @@ This exercise accompanies the lessons in Environmental Data Analytics on Data Vi
 
 ## Set up your session 
 
-1. Set up your session. Load the tidyverse, lubridate, here & cowplot packages, and verify your home directory. Read in the NTL-LTER processed data files for nutrients and chemistry/physics for Peter and Paul Lakes (use the tidy `NTL-LTER_Lake_Chemistry_Nutrients_PeterPaul_Processed.csv` version in the Processed_KEY folder) and the processed data file for the Niwot Ridge litter dataset (use the `NEON_NIWO_Litter_mass_trap_Processed.csv` version, again from the Processed_KEY folder). 
+1. Set up your session. Load the tidyverse, lubridate, here & cowplot packages, and verify your home directory. Read in the NTL-LTER processed data files for nutrients and chemistry/physics for Peter and Paul Lakes (use the tidy `NTL-LTER_Lake_Chemistry_Nutrients_PeterPaul_Processed.csv` version in the Processed_KEY folder) and the processed data file for the Niwot Ridge litter dataset (use the `NEON_NIWO_Litter_mass_trap_Processed.csv` version, again from the Processed_KEY folder).
 
 2. Make sure R is reading dates as date format; if not change the format to date.
 
 ```{r initialize project}
-#1 
+#1
+library(tidyverse)
+library(lubridate)
+library(here)
+library(cowplot)
+library(ggthemes)
+getwd()
+lake_chem_df <- read.csv("./Data/Processed_KEY/NTL-LTER_Lake_Chemistry_Nutrients_PeterPaul_Processed.csv")
+litter_df <- read.csv("./Data/Processed_KEY/NEON_NIWO_Litter_mass_trap_Processed.csv")
 
 #2 
+class(lake_chem_df$sampledate)
+class(litter_df$collectDate)
+lake_chem_df$sampledate <- as.Date(lake_chem_df$sampledate)
+litter_df$collectDate <-as.Date(litter_df$collectDate)
 
 ```
 ## Define your theme
@@ -46,7 +58,28 @@ This exercise accompanies the lessons in Environmental Data Analytics on Data Vi
 
 ```{r build plot theme}
 #3
-
+theme1 <- theme_base() + 
+  theme(
+    plot.title = element_text(
+      color = 'gray35', hjust = 0.5, size = 16
+    ),
+      plot.background =   element_rect(
+      fill = 'mistyrose', color = 'gray35'
+    ),
+    legend.background = element_rect(
+      color='gray35',
+      fill = 'rosybrown'
+    ),
+    legend.title = element_text(
+      color='white', size = 12
+    ),
+    legend.text = element_text(
+      size=10),
+    axis.title = element_text(
+      size=12),
+    axis.text = element_text(
+      size=10)
+  )
 ```
 
 ## Create graphs
@@ -56,7 +89,14 @@ For numbers 4-7, create ggplot graphs and adjust aesthetics to follow best pract
 
 ```{r plot total P vs PO4}
 #4 
-
+# x = po4, y = tp_ug
+ggplot(lake_chem_df, aes(x = po4, y = tp_ug, color = lakename)) +
+  geom_point() +
+  xlim(0,35) +
+  labs(title = "Phosphorus by Phosphate in Peter and Paul Lakes", x = "Phosphate", 
+       y = "Phosphorus", color = "Lake Name") +
+  geom_smooth(method = lm, color = "black") +
+  theme1
 ```
 
 
@@ -68,6 +108,46 @@ Tip:
 
 ```{r Create boxplots}
 #5 
+temp_bp <- ggplot(lake_chem_df, 
+                  aes(x = factor(month, levels = 1:12, 
+                                 labels = month.abb), 
+                      y = temperature_C, color = lakename)) +
+  geom_boxplot() +
+  scale_x_discrete(name = "Month", drop = F) +
+  labs(title = "Lake Temperature by Month", y = "Temperature (C)",
+       color = "Lake Name") +
+  theme1
+temp_bp
+
+tp_bp <- ggplot(lake_chem_df, 
+                aes(x = factor(month, levels = 1:12,
+                               labels = month.abb), 
+                    y = tp_ug, color = lakename)) +
+  geom_boxplot() +
+  scale_x_discrete(name = "Month", drop = F) +
+  labs(title = "Lake Total Phosphorus by Month", x = "Month", y = "Total Phosphorus",
+       color = "Lake Name") +
+  theme1
+tp_bp
+
+tn_bp <- ggplot(lake_chem_df,
+                aes(x = factor(month, levels = 1:12,
+                                             labels = month.abb),
+                                  y = tn_ug, color = lakename)) +
+  geom_boxplot() +
+  scale_x_discrete(name = "Month", drop = F) +
+  labs(title = "Lake Total Nitrogen by Month", x = "Month", y = "Total Nitrogen",
+       color = "Lake Name") +
+  theme1
+tn_bp
+
+plot_grid(temp_bp + theme(legend.position="none"),
+          tp_bp + theme(legend.position="none"),
+          tn_bp + theme(legend.position="none"), ncol = 1, align = "h", axis = "lr",
+          legend = get_legend(temp_bp + 
+                                guides(color = guide_legend(nrow = 1)))) +
+  theme1
+
 
 ```
 
@@ -81,12 +161,24 @@ Question: What do you observe about the variables of interest over seasons and b
 
 ```{r Plot litter}
 #6
-
-
+ggplot(filter(litter_df, functionalGroup == "Needles"),
+       aes(x = collectDate, y = dryMass, color = nlcdClass)) +
+  geom_point() +
+  labs(title = "Needle Dry Mass by Date and NCLD Class", x = "Sample Date",
+       y = "Needle Dry Mass", color = "NLCD Class") +
+  theme1
+  
 #7
-
+ggplot(filter(litter_df, functionalGroup == "Needles"),
+       aes(x = collectDate, y = dryMass)) +
+  geom_point() +
+  labs(title = "Needle Dry Mass by Date and NCLD Class", x = "Sample Date",
+       y = "Needle Dry Mass (g)") +
+  facet_wrap(vars(nlcdClass)) +
+  theme1
 
 ```
 Question: Which of these plots (6 vs. 7) do you think is more effective, and why? 
 
-> Answer:
+> Answer: I like the faceted graph (7) better. The points in 6 are somewhat overlapping, which makes reading the graph hard. Additionally, I think it would be easier for people with colorblindness to read graph 7 because color isn't as important of a component.
+
