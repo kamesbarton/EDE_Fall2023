@@ -14,7 +14,7 @@ editor_options:
 
 ## Set up
 ```{r, message = FALSE}
-
+#string must be stored as factor to run ANOVA
 library(tidyverse)
 #install.packages("agricolae")
 library(agricolae)   #you may need to install/update package "htmltools" before installing and loading agricolae
@@ -38,6 +38,11 @@ A one-way ANOVA is used when you have one categorical explanatory variable with 
 
 For example: Does total litter biomass differ among sites at the Niwot Ridge LTER?
 ```{r}
+#Predicting Y from categorical variables
+#assumptions: populations normally distributed, variance equal, observations are independent
+#can fail checks due to small sample size
+#lm can still be used on categorical data; R will automatically switch it to anova
+
 # Wrangle the data
 Litter.Totals <- Litter %>%
   group_by(plotID, collectDate, nlcdClass) %>%

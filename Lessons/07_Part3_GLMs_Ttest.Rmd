@@ -63,6 +63,8 @@ H0: mu >= 50
 Ha: mu < 50
 
 ```{r}
+#t-tests can be run using linear model framework
+
 summary(EPAair$Ozone) #mean = 40.88 and median = 40
 length(EPAair$Ozone) #8976 observations
 
@@ -93,6 +95,8 @@ For example, we might ask ourselves (from the EPA air quality processed dataset)
 Are Ozone levels different between 2018 and 2019?
 
 ```{r}
+#do samples have the same or different means?
+#we can use lm function
 #First let's look at the data
 ggplot(EPAair, aes(x = Ozone, color = as.factor(Year))) +
   geom_freqpoly()
